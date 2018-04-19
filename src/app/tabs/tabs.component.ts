@@ -88,6 +88,7 @@ export class TabsComponent implements AfterContentInit {
 
     // activate the tab the user has clicked on.
     tab.active = true;
+    this.selectedOptions = [tab.tabTitle];
   }
 
   closeTab(tab: TabComponent) {

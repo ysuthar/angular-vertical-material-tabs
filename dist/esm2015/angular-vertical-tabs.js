@@ -157,6 +157,7 @@ class TabsComponent {
         this.deactivateTabs();
         // activate the tab the user has clicked on.
         tab.active = true;
+        this.selectedOptions = [tab.tabTitle];
     }
     /**
      * @param {?} tab

@@ -96,6 +96,7 @@ var TabsComponent = /** @class */ (function () {
     TabsComponent.prototype.selectTab = function (tab) {
         this.deactivateTabs();
         tab.active = true;
+        this.selectedOptions = [tab.tabTitle];
     };
     TabsComponent.prototype.closeTab = function (tab) {
         for (var i = 0; i < this.dynamicTabs.length; i++) {
