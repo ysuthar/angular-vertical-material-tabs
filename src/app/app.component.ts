@@ -3,17 +3,18 @@ import { PeopleService } from './people/people.service';
 import { TabsComponent } from './tabs/tabs.component';
 
 @Component({
-  selector: 'app-root',
+  selector: 'vertical-root',
   template: `
-    <h1>Angular tabs</h1>
-    <ngx-tabs>
-      <ngx-tab tabTitle="People List">
+    <h1>Vertical tabs</h1>
+    <vertical-tabs>
+      <vertical-tab tabTitle="People List">
         <app-people-list [people]="people"
-          (addPerson)="onAddPerson()"
-          (editPerson)="onEditPerson($event)">
-          ></app-people-list>
-      </ngx-tab>
-    </ngx-tabs>
+                         (addPerson)="onAddPerson()"
+                         (editPerson)="onEditPerson($event)">
+          >
+        </app-people-list>
+      </vertical-tab>
+    </vertical-tabs>
 
     <ng-template let-person="person" #personEdit>
       <app-person-edit [person]="person" (savePerson)="onPersonFormSubmit($event)"></app-person-edit>
@@ -25,7 +26,8 @@ export class AppComponent implements OnInit {
   @ViewChild(TabsComponent) tabsComponent: TabsComponent;
   people;
 
-  constructor(private peopleService: PeopleService) {}
+  constructor(private peopleService: PeopleService) {
+  }
 
   ngOnInit() {
     this.peopleService.getPeople().subscribe(data => {

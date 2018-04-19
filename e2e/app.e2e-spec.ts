@@ -1,6 +1,6 @@
 import { AppPage } from './app.po';
 
-describe('dynamic-tabs App', () => {
+describe('angular-vertical-tabs App', () => {
   let page: AppPage;
 
   beforeEach(() => {
