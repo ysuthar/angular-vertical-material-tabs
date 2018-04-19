@@ -24,6 +24,7 @@ export class TabsComponent implements AfterContentInit {
   @ViewChild(MatSelectionList) list: MatSelectionList;
 
   @Input() multi = true;
+  @Input() selectFirstTab = true;
 
   dynamicTabs: TabComponent[] = [];
 
@@ -36,7 +37,7 @@ export class TabsComponent implements AfterContentInit {
   // contentChildren are set
   ngAfterContentInit() {
     // if there is no active tab set, activate the first
-    if (!this.tabs.filter(tab => tab.active).length)
+    if (this.selectFirstTab && !this.tabs.filter(tab => tab.active).length)
       this.selectTab(this.tabs.first);
   }
 

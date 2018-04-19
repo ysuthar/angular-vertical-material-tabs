@@ -77,6 +77,7 @@ class TabsComponent {
     constructor(componentFactoryResolver) {
         this.componentFactoryResolver = componentFactoryResolver;
         this.multi = true;
+        this.selectFirstTab = true;
         this.dynamicTabs = [];
         this.selectedOptions = [];
     }
@@ -86,7 +87,7 @@ class TabsComponent {
     ngAfterContentInit() {
         // if there is no active tab set, activate the first
         // if there is no active tab set, activate the first
-        if (!this.tabs.filter(tab => tab.active).length)
+        if (this.selectFirstTab && !this.tabs.filter(tab => tab.active).length)
             this.selectTab(this.tabs.first);
     }
     /**
@@ -219,6 +220,7 @@ TabsComponent.propDecorators = {
     "dynamicTabPlaceholder": [{ type: ViewChild, args: [DynamicTabAnchorDirective,] },],
     "list": [{ type: ViewChild, args: [MatSelectionList,] },],
     "multi": [{ type: Input },],
+    "selectFirstTab": [{ type: Input },],
 };
 
 /**

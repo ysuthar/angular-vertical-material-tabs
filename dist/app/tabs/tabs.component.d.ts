@@ -8,6 +8,7 @@ export declare class TabsComponent implements AfterContentInit {
     dynamicTabPlaceholder: DynamicTabAnchorDirective;
     list: MatSelectionList;
     multi: boolean;
+    selectFirstTab: boolean;
     dynamicTabs: TabComponent[];
     selectedOptions: string[];
     lastSelectedOptions: string[];

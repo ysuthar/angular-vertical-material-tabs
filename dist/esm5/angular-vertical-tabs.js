@@ -45,11 +45,12 @@ var TabsComponent = /** @class */ (function () {
     function TabsComponent(componentFactoryResolver) {
         this.componentFactoryResolver = componentFactoryResolver;
         this.multi = true;
+        this.selectFirstTab = true;
         this.dynamicTabs = [];
         this.selectedOptions = [];
     }
     TabsComponent.prototype.ngAfterContentInit = function () {
-        if (!this.tabs.filter(function (tab) { return tab.active; }).length)
+        if (this.selectFirstTab && !this.tabs.filter(function (tab) { return tab.active; }).length)
             this.selectTab(this.tabs.first);
     };
     TabsComponent.prototype.toggleTabActivations = function () {
@@ -136,6 +137,7 @@ TabsComponent.propDecorators = {
     "dynamicTabPlaceholder": [{ type: ViewChild, args: [DynamicTabAnchorDirective,] },],
     "list": [{ type: ViewChild, args: [MatSelectionList,] },],
     "multi": [{ type: Input },],
+    "selectFirstTab": [{ type: Input },],
 };
 var TabsModule = /** @class */ (function () {
     function TabsModule() {
