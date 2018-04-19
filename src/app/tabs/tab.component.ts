@@ -13,8 +13,8 @@ import { Component, Input } from '@angular/core';
     <div *ngIf="active" class="pane">
       <ng-content></ng-content>
       <ng-container *ngIf="template"
-        [ngTemplateOutlet]="template"
-        [ngTemplateOutletContext]="{person: dataContext}">
+                    [ngTemplateOutlet]="template"
+                    [ngTemplateOutletContext]="{person: dataContext}">
       </ng-container>
     </div>
   `

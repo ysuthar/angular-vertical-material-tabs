@@ -1,9 +1,11 @@
-import { PeopleService } from './people.service';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule } from '@angular/forms';
+
 import { PeopleListComponent } from './people-list.component';
 import { PersonEditComponent } from './person-edit.component';
-import { ReactiveFormsModule } from '@angular/forms';
+import { PeopleService } from './people.service';
+
 
 @NgModule({
   imports: [CommonModule, ReactiveFormsModule],
@@ -11,4 +13,5 @@ import { ReactiveFormsModule } from '@angular/forms';
   providers: [PeopleService],
   exports: [PeopleListComponent, PersonEditComponent]
 })
-export class PeopleModule {}
+export class PeopleModule {
+}

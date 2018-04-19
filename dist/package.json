@@ -1,14 +1,14 @@
 {
   "name": "angular-vertical-tabs",
-  "version": "0.0.1-alpha",
+  "version": "0.0.1-beta",
   "license": "MIT",
   "private": true,
   "dependencies": {
-    "@angular/compiler": "^5.2.10",
-    "@angular/core": "^5.2.10",
     "@angular/animations": "^5.2.10",
     "@angular/cdk": "^5.2.5",
     "@angular/common": "^5.2.10",
+    "@angular/compiler": "^5.2.10",
+    "@angular/core": "^5.2.10",
     "@angular/flex-layout": "^5.0.0-beta.14",
     "@angular/forms": "^5.2.10",
     "@angular/http": "^5.2.10",
@@ -16,6 +16,7 @@
     "@angular/platform-browser": "^5.2.10",
     "@angular/platform-browser-dynamic": "^5.2.10",
     "@angular/router": "^5.2.10",
+    "zone.js": "^0.8.26",
     "tslib": "^1.7.1"
   },
   "peerDependencies": {

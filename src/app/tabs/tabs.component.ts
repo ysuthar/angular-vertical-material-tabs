@@ -1,4 +1,13 @@
-import { AfterContentInit, Component, ComponentFactoryResolver, ContentChildren, Input, QueryList, ViewChild } from '@angular/core';
+import {
+  AfterContentInit,
+  Component,
+  ComponentFactoryResolver,
+  ContentChildren,
+  Input,
+  QueryList,
+  ViewChild
+} from '@angular/core';
+import { MatSelectionList } from '@angular/material';
 
 import { TabComponent } from './tab.component';
 import { DynamicTabAnchorDirective } from './dynamic-tab-anchor.directive';
@@ -12,12 +21,13 @@ export class TabsComponent implements AfterContentInit {
   @ViewChild(DynamicTabAnchorDirective)
   dynamicTabPlaceholder: DynamicTabAnchorDirective;
 
-  @Input() multitab = true;
-  // @ViewChild('container', { read: ViewContainerRef })
-  // dynamicTabPlaceholder;
+  @ViewChild(MatSelectionList) list: MatSelectionList;
+
+  @Input() multi = true;
+
   dynamicTabs: TabComponent[] = [];
 
-  selectedOptions: string[];
+  selectedOptions: string[] = [];
   lastSelectedOptions: string[];
 
   constructor(private componentFactoryResolver: ComponentFactoryResolver) {
@@ -25,37 +35,56 @@ export class TabsComponent implements AfterContentInit {
 
   // contentChildren are set
   ngAfterContentInit() {
-    // get all active tabs
-    const activeTabs = this.tabs.filter(tab => tab.active);
-
     // if there is no active tab set, activate the first
-    if (activeTabs.length === 0) {
+    if (!this.tabs.filter(tab => tab.active).length)
       this.selectTab(this.tabs.first);
-    }
   }
 
-  onNgModelChange(event: Event) {
-    if (!this.multitab) {
-      // TODO: Get it so only one tab is selected at a time. Attempt:
-      if (this.selectedOptions && this.selectedOptions.length > 1)
-        delete this.selectedOptions[this.selectedOptions.indexOf(this.lastSelectedOptions[0])];
-      this.lastSelectedOptions = this.selectedOptions;
-    }
+  private toggleTabActivations() {
+    const arr: TabComponent[] = this.tabs.toArray().concat(this.dynamicTabs);
+    if (arr == null || arr.length < 1) return;
+    const s = new Set(this.selectedOptions);
+    arr.forEach(tab => tab.active = s.has(tab.tabTitle));
+  }
 
-    this.deactivateTabs();
+  private setOptions() {
+    if (this.multi || !this.selectedOptions.length ||
+      !this.lastSelectedOptions || !this.lastSelectedOptions.length)
+      return;
 
-    const activate = (arr: TabComponent[]) => {
-      if (arr == null || arr.length < 1) return;
-      const s = new Set(this.selectedOptions);
-      for (let i = 0; i < arr.length; i++)
-        if (s.has(arr[i].tabTitle)) {
-          arr[i].active = true;
-          if (!this.multitab) return;
-        } else arr[i].active = false;
-    };
+    this.selectedOptions = this.selectedOptions.filter(
+      tabTitle => tabTitle !== this.lastSelectedOptions[this.lastSelectedOptions.length - 1]
+    );
 
-    activate(this.tabs.toArray());
-    activate(this.dynamicTabs);
+    this.lastSelectedOptions = this.selectedOptions;
+  }
+
+  onNgModelChange(/*selected: string[]*/) {
+    this.setOptions();
+    this.toggleTabActivations();
+  }
+
+  selectTab(tab: TabComponent) {
+    this.multi ?
+      this.selectedOptions.push(tab.tabTitle)
+      : this.selectedOptions = [tab.tabTitle];
+    tab.active = true;
+
+    if (!this.list.options) return;
+
+    const options = this.list.options.map(t => t.value);
+    const s = new Set(this.selectedOptions);
+    this.list.options.forEach(t => {
+      t.selected = s.has(t.value);
+      // console.info(`'${t.value}' selected:`, t.selected);
+    });
+
+    const options_set = new Set(options);
+    this.selectedOptions.forEach(option => {
+      if (!options_set.has(option))
+        throw TypeError(`'${option}' not found in mat-selection-list`);
+    });
+
   }
 
   openTab(title: string, template, data, isCloseable = false) {
@@ -72,24 +101,13 @@ export class TabsComponent implements AfterContentInit {
     instance.template = template;
     instance.dataContext = data;
     instance.isCloseable = isCloseable;
+    instance.active = true;
 
     this.dynamicTabs.push(instance);
 
     this.selectTab(this.dynamicTabs[this.dynamicTabs.length - 1]);
   }
 
-  private deactivateTabs() {
-    this.tabs.toArray().forEach(_tab => _tab.active = false);
-    this.dynamicTabs.forEach(_tab => _tab.active = false);
-  }
-
-  selectTab(tab: TabComponent) {
-    this.deactivateTabs();
-
-    // activate the tab the user has clicked on.
-    tab.active = true;
-    this.selectedOptions = [tab.tabTitle];
-  }
 
   closeTab(tab: TabComponent) {
     for (let i = 0; i < this.dynamicTabs.length; i++) {
@@ -97,7 +115,7 @@ export class TabsComponent implements AfterContentInit {
         this.dynamicTabs.splice(i, 1);
 
         this.dynamicTabPlaceholder.viewContainer.remove(i);
-
+        this.selectedOptions = [tab.tabTitle];  // TODO: duplicate handling
         this.selectTab(this.tabs.first);
         break;
       }
@@ -105,9 +123,8 @@ export class TabsComponent implements AfterContentInit {
   }
 
   closeActiveTab() {
+    if (this.multi) console.warn('Closing the first active tab');
     const activeTab = this.dynamicTabs.filter(tab => tab.active);
-    if (activeTab.length > 0) {
-      this.closeTab(activeTab[0]);
-    }
+    if (activeTab.length > 0) this.closeTab(activeTab[0]);
   }
 }

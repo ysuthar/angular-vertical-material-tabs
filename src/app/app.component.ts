@@ -1,65 +1,52 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { PeopleService } from './people/people.service';
+
+import { IPerson, PeopleService } from './people/people.service';
 import { TabsComponent } from './tabs/tabs.component';
 
 @Component({
   selector: 'vertical-root',
-  template: `
-    <h1>Vertical tabs</h1>
-    <vertical-tabs>
-      <vertical-tab tabTitle="People List">
-        <app-people-list [people]="people"
-                         (addPerson)="onAddPerson()"
-                         (editPerson)="onEditPerson($event)">
-          >
-        </app-people-list>
-      </vertical-tab>
-    </vertical-tabs>
-
-    <ng-template let-person="person" #personEdit>
-      <app-person-edit [person]="person" (savePerson)="onPersonFormSubmit($event)"></app-person-edit>
-    </ng-template>
-  `
+  templateUrl: './app.component.html'
 })
 export class AppComponent implements OnInit {
   @ViewChild('personEdit') personEditTemplate;
   @ViewChild(TabsComponent) tabsComponent: TabsComponent;
-  people;
+  people: IPerson[];
 
   constructor(private peopleService: PeopleService) {
   }
 
   ngOnInit() {
-    this.peopleService.getPeople().subscribe(data => {
-      this.people = data;
-    });
-
-    console.log(this.personEditTemplate);
+    this.peopleService
+      .getPeople()
+      .subscribe(data => this.people = data);
   }
 
   onEditPerson(person) {
-    this.tabsComponent.openTab(
-      `Editing ${person.name}`,
-      this.personEditTemplate,
-      person,
-      true
-    );
+    this.tabsComponent
+      .openTab(
+        `Editing ${person.name}`,
+        this.personEditTemplate,
+        person,
+        true
+      );
   }
 
   onAddPerson() {
-    this.tabsComponent.openTab('New Person', this.personEditTemplate, {}, true);
+    this.tabsComponent
+      .openTab(
+        'New Person',
+        this.personEditTemplate,
+        {},
+        true
+      );
   }
 
   onPersonFormSubmit(dataModel) {
-    if (dataModel.id > 0) {
-      this.people = this.people.map(person => {
-        if (person.id === dataModel.id) {
-          return dataModel;
-        } else {
-          return person;
-        }
-      });
-    } else {
+    if (dataModel.id > 0)
+      this.people = this.people.map(person =>
+        person.id === dataModel.id ? dataModel : person
+      );
+    else {
       // create a new one
       dataModel.id = Math.round(Math.random() * 100);
       this.people.push(dataModel);

@@ -8,6 +8,6 @@
     }
   },
   "whitelistedNonPeerDependencies": [
-    "angular"
+    "angular", "zone"
   ]
 }

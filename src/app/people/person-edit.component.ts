@@ -3,11 +3,13 @@
  * object.
  */
 
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 
+import { IPerson } from './people.service';
+
 @Component({
-  selector: 'app-person-edit',
+  selector: 'vertical-person-edit',
   template: `
     <form [formGroup]="personForm" (ngSubmit)="onPersonFormSubmit()">
       <input type="hidden" formControlName="id">
@@ -33,7 +35,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 export class PersonEditComponent implements OnInit {
   personForm: FormGroup;
 
-  @Input() person;
+  @Input() person: IPerson;
   @Output() savePerson = new EventEmitter<any>();
 
   constructor(private fb: FormBuilder) {
