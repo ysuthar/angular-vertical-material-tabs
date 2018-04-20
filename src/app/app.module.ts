@@ -9,7 +9,7 @@ import { AppComponent } from './app.component';
 
 @NgModule({
   declarations: [AppComponent],
-  imports: [BrowserModule, FlexLayoutModule, TabsModule, PeopleModule],
+  imports: [BrowserModule, FlexLayoutModule, TabsModule.forRoot(), PeopleModule],
   providers: [],
   bootstrap: [AppComponent]
 })

@@ -160,6 +160,9 @@ TabsComponent.propDecorators = {
 var TabsModule = /** @class */ (function () {
     function TabsModule() {
     }
+    TabsModule.forRoot = function () {
+        return { ngModule: TabsModule, providers: [TabsService] };
+    };
     return TabsModule;
 }());
 TabsModule.decorators = [
@@ -170,7 +173,6 @@ TabsModule.decorators = [
                     MatListModule, MatDividerModule, MatButtonModule
                 ],
                 declarations: [TabsComponent, TabComponent, DynamicTabAnchorDirective],
-                providers: [TabsService],
                 exports: [TabsComponent, TabComponent],
                 entryComponents: [TabComponent]
             },] },

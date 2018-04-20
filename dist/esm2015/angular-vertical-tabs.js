@@ -258,6 +258,12 @@ TabsComponent.propDecorators = {
  * @suppress {checkTypes} checked by tsc
  */
 class TabsModule {
+    /**
+     * @return {?}
+     */
+    static forRoot() {
+        return { ngModule: TabsModule, providers: [TabsService] };
+    }
 }
 TabsModule.decorators = [
     { type: NgModule, args: [{
@@ -267,7 +273,7 @@ TabsModule.decorators = [
                     MatListModule, MatDividerModule, MatButtonModule
                 ],
                 declarations: [TabsComponent, TabComponent, DynamicTabAnchorDirective],
-                providers: [TabsService],
+                // providers: [TabsService],
                 exports: [TabsComponent, TabComponent],
                 entryComponents: [TabComponent]
             },] },

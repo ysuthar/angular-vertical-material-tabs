@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { ModuleWithProviders, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule, MatDividerModule, MatListModule } from '@angular/material';
@@ -17,9 +17,12 @@ import { TabsService } from './tabs.service';
     MatListModule, MatDividerModule, MatButtonModule
   ],
   declarations: [TabsComponent, TabComponent, DynamicTabAnchorDirective],
-  providers: [TabsService],
+  // providers: [TabsService],
   exports: [TabsComponent, TabComponent],
   entryComponents: [TabComponent]
 })
 export class TabsModule {
+  public static forRoot(): ModuleWithProviders {
+    return {ngModule: TabsModule, providers: [TabsService]};
+  }
 }
