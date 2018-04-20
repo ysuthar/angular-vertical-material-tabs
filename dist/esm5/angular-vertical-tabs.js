@@ -176,5 +176,5 @@ TabsModule.decorators = [
             },] },
 ];
 
-export { TabsComponent, TabComponent, TabsModule, DynamicTabAnchorDirective as ɵb, TabsService as ɵa };
+export { TabsService, TabsComponent, TabComponent, TabsModule, DynamicTabAnchorDirective as ɵa };
 //# sourceMappingURL=angular-vertical-tabs.js.map

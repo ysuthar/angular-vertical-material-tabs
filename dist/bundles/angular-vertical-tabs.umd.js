@@ -176,11 +176,11 @@ TabsModule.decorators = [
             },] },
 ];
 
+exports.TabsService = TabsService;
 exports.TabsComponent = TabsComponent;
 exports.TabComponent = TabComponent;
 exports.TabsModule = TabsModule;
-exports.ɵb = DynamicTabAnchorDirective;
-exports.ɵa = TabsService;
+exports.ɵa = DynamicTabAnchorDirective;
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
