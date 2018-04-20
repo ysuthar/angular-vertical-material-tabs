@@ -12,6 +12,7 @@ export declare class TabsComponent implements AfterContentInit {
     multi: boolean;
     selectFirstTab: boolean;
     showSelectAll: boolean;
+    allSelected: boolean;
     dynamicTabs: TabComponent[];
     lastSelectedOptions: string[];
     constructor(componentFactoryResolver: ComponentFactoryResolver, tabService: TabsService);
@@ -20,7 +21,9 @@ export declare class TabsComponent implements AfterContentInit {
     private setOptions();
     onNgModelChange(): void;
     selectTab(tab: TabComponent): void;
+    private checkSelectAll();
     openTab(title: string, template: any, data: any, isCloseable?: boolean): void;
     closeTab(tab: TabComponent): void;
     closeActiveTab(): void;
+    toggleSelect(): void;
 }

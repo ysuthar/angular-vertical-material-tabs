@@ -44,7 +44,9 @@ TabComponent.decorators = [
   `
                 ],
                 template: `<div *ngIf="active" class="pane">
-  <h3 *ngIf="tabsService.multi && tabsService.selectedOptions.length > 1">{{tabTitle}}</h3>
+  <h3 class="tab-heading" *ngIf="tabsService.multi && tabsService.selectedOptions.length > 1">
+    {{tabTitle}}
+  </h3>
   <ng-content></ng-content>
   <ng-container *ngIf="template"
                 [ngTemplateOutlet]="template"
@@ -103,6 +105,7 @@ class TabsComponent {
         this.multi = true;
         this.selectFirstTab = true;
         this.showSelectAll = false;
+        this.allSelected = true;
         this.dynamicTabs = [];
         this.tabService.multi = this.multi;
     }
@@ -110,7 +113,6 @@ class TabsComponent {
      * @return {?}
      */
     ngAfterContentInit() {
-        // if there is no active tab set, activate the first
         // if there is no active tab set, activate the first
         if (this.selectFirstTab && !this.tabs.filter(tab => tab.active).length)
             this.selectTab(this.tabs.first);
@@ -141,6 +143,7 @@ class TabsComponent {
     onNgModelChange() {
         this.setOptions();
         this.toggleTabActivations();
+        this.checkSelectAll();
     }
     /**
      * @param {?} tab
@@ -164,6 +167,13 @@ class TabsComponent {
             if (!options_set.has(option))
                 throw TypeError(`'${option}' not found in mat-selection-list`);
         });
+        this.checkSelectAll();
+    }
+    /**
+     * @return {?}
+     */
+    checkSelectAll() {
+        this.allSelected = this.list.options.reduce((p, c) => p ? c.selected : p, true);
     }
     /**
      * @param {?} title
@@ -211,6 +221,13 @@ class TabsComponent {
         if (activeTab.length > 0)
             this.closeTab(activeTab[0]);
     }
+    /**
+     * @return {?}
+     */
+    toggleSelect() {
+        this.allSelected ? this.list.deselectAll() : this.list.selectAll();
+        this.allSelected = !this.allSelected;
+    }
 }
 TabsComponent.decorators = [
     { type: Component, args: [{
@@ -225,9 +242,9 @@ TabsComponent.decorators = [
       </mat-list-option>
     </mat-selection-list>
     <mat-divider></mat-divider>
-    <button mat-button color="primary" id="select_all"
-            (click)="list.selectAll()" *ngIf="showSelectAll">
-      Select all
+    <button mat-button color="primary" id="select"
+            (click)="toggleSelect()" *ngIf="showSelectAll">
+      {{allSelected ? 'Reset selection' : 'Select all'}}
     </button>
   </div>
 

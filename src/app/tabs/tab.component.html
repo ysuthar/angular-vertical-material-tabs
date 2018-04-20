@@ -1,5 +1,7 @@
 <div *ngIf="active" class="pane">
-  <h3 *ngIf="tabsService.multi && tabsService.selectedOptions.length > 1">{{tabTitle}}</h3>
+  <h3 class="tab-heading" *ngIf="tabsService.multi && tabsService.selectedOptions.length > 1">
+    {{tabTitle}}
+  </h3>
   <ng-content></ng-content>
   <ng-container *ngIf="template"
                 [ngTemplateOutlet]="template"

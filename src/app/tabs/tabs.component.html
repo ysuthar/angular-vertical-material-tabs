@@ -8,9 +8,9 @@
       </mat-list-option>
     </mat-selection-list>
     <mat-divider></mat-divider>
-    <button mat-button color="primary" id="select_all"
-            (click)="list.selectAll()" *ngIf="showSelectAll">
-      Select all
+    <button mat-button color="primary" id="select"
+            (click)="toggleSelect()" *ngIf="showSelectAll">
+      {{allSelected ? 'Reset selection' : 'Select all'}}
     </button>
   </div>
 

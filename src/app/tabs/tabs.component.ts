@@ -1,12 +1,4 @@
-import {
-  AfterContentInit,
-  Component,
-  ComponentFactoryResolver,
-  ContentChildren,
-  Input,
-  QueryList,
-  ViewChild
-} from '@angular/core';
+import { AfterContentInit, Component, ComponentFactoryResolver, ContentChildren, Input, QueryList, ViewChild } from '@angular/core';
 import { MatSelectionList } from '@angular/material';
 
 import { TabComponent } from './tab.component';
@@ -27,6 +19,7 @@ export class TabsComponent implements AfterContentInit {
   @Input() multi = true;
   @Input() selectFirstTab = true;
   @Input() showSelectAll = false;
+  allSelected = true;
 
   dynamicTabs: TabComponent[] = [];
 
@@ -66,6 +59,7 @@ export class TabsComponent implements AfterContentInit {
   onNgModelChange(/*selected: string[]*/) {
     this.setOptions();
     this.toggleTabActivations();
+    this.checkSelectAll();
   }
 
   selectTab(tab: TabComponent) {
@@ -89,6 +83,11 @@ export class TabsComponent implements AfterContentInit {
         throw TypeError(`'${option}' not found in mat-selection-list`);
     });
 
+    this.checkSelectAll();
+  }
+
+  private checkSelectAll() {
+    this.allSelected = this.list.options.reduce((p, c) => p ? c.selected : p, true);
   }
 
   openTab(title: string, template, data, isCloseable = false) {
@@ -108,7 +107,6 @@ export class TabsComponent implements AfterContentInit {
     instance.active = true;
 
     this.dynamicTabs.push(instance);
-
     this.selectTab(this.dynamicTabs[this.dynamicTabs.length - 1]);
   }
 
@@ -130,5 +128,10 @@ export class TabsComponent implements AfterContentInit {
     if (this.multi) console.warn('Closing the first active tab');
     const activeTab = this.dynamicTabs.filter(tab => tab.active);
     if (activeTab.length > 0) this.closeTab(activeTab[0]);
+  }
+
+  toggleSelect() {
+    this.allSelected ? this.list.deselectAll() : this.list.selectAll();
+    this.allSelected = !this.allSelected;
   }
 }
