@@ -4,8 +4,19 @@
 	(factory((global['angular-vertical-tabs'] = {}),global.ng.core,global.ng.material,global.ng.common,global.ng.forms,global.ng['flex-layout']));
 }(this, (function (exports,core,material,common,forms,flexLayout) { 'use strict';
 
+var TabsService = /** @class */ (function () {
+    function TabsService() {
+        this.selectedOptions = [];
+    }
+    return TabsService;
+}());
+TabsService.decorators = [
+    { type: core.Injectable },
+];
+TabsService.ctorParameters = function () { return []; };
 var TabComponent = /** @class */ (function () {
-    function TabComponent() {
+    function TabComponent(tabsService) {
+        this.tabsService = tabsService;
         this.active = false;
         this.isCloseable = false;
     }
@@ -15,11 +26,14 @@ TabComponent.decorators = [
     { type: core.Component, args: [{
                 selector: 'vertical-tab',
                 styles: [
-                    "\n    .pane{\n      padding: 1em;\n    }\n  "
+                    "\n    .pane {\n      padding: 1em;\n    }\n  "
                 ],
-                template: "\n    <div *ngIf=\"active\" class=\"pane\">\n      <ng-content></ng-content>\n      <ng-container *ngIf=\"template\"\n                    [ngTemplateOutlet]=\"template\"\n                    [ngTemplateOutletContext]=\"{person: dataContext}\">\n      </ng-container>\n    </div>\n  "
+                template: "<div *ngIf=\"active\" class=\"pane\">\n  <h3 *ngIf=\"tabsService.multi && tabsService.selectedOptions.length > 1\">{{tabTitle}}</h3>\n  <ng-content></ng-content>\n  <ng-container *ngIf=\"template\"\n                [ngTemplateOutlet]=\"template\"\n                [ngTemplateOutletContext]=\"{person: dataContext}\">\n  </ng-container>\n</div>\n"
             },] },
 ];
+TabComponent.ctorParameters = function () { return [
+    { type: TabsService, },
+]; };
 TabComponent.propDecorators = {
     "tabTitle": [{ type: core.Input },],
     "active": [{ type: core.Input },],
@@ -42,12 +56,14 @@ DynamicTabAnchorDirective.ctorParameters = function () { return [
     { type: core.ViewContainerRef, },
 ]; };
 var TabsComponent = /** @class */ (function () {
-    function TabsComponent(componentFactoryResolver) {
+    function TabsComponent(componentFactoryResolver, tabService) {
         this.componentFactoryResolver = componentFactoryResolver;
+        this.tabService = tabService;
         this.multi = true;
         this.selectFirstTab = true;
+        this.showSelectAll = false;
         this.dynamicTabs = [];
-        this.selectedOptions = [];
+        this.tabService.multi = this.multi;
     }
     TabsComponent.prototype.ngAfterContentInit = function () {
         if (this.selectFirstTab && !this.tabs.filter(function (tab) { return tab.active; }).length)
@@ -57,16 +73,16 @@ var TabsComponent = /** @class */ (function () {
         var arr = this.tabs.toArray().concat(this.dynamicTabs);
         if (arr == null || arr.length < 1)
             return;
-        var s = new Set(this.selectedOptions);
+        var s = new Set(this.tabService.selectedOptions);
         arr.forEach(function (tab) { return tab.active = s.has(tab.tabTitle); });
     };
     TabsComponent.prototype.setOptions = function () {
         var _this = this;
-        if (this.multi || !this.selectedOptions.length ||
+        if (this.multi || !this.tabService.selectedOptions.length ||
             !this.lastSelectedOptions || !this.lastSelectedOptions.length)
             return;
-        this.selectedOptions = this.selectedOptions.filter(function (tabTitle) { return tabTitle !== _this.lastSelectedOptions[_this.lastSelectedOptions.length - 1]; });
-        this.lastSelectedOptions = this.selectedOptions;
+        this.tabService.selectedOptions = this.tabService.selectedOptions.filter(function (tabTitle) { return tabTitle !== _this.lastSelectedOptions[_this.lastSelectedOptions.length - 1]; });
+        this.lastSelectedOptions = this.tabService.selectedOptions;
     };
     TabsComponent.prototype.onNgModelChange = function () {
         this.setOptions();
@@ -74,18 +90,18 @@ var TabsComponent = /** @class */ (function () {
     };
     TabsComponent.prototype.selectTab = function (tab) {
         this.multi ?
-            this.selectedOptions.push(tab.tabTitle)
-            : this.selectedOptions = [tab.tabTitle];
+            this.tabService.selectedOptions.push(tab.tabTitle)
+            : this.tabService.selectedOptions = [tab.tabTitle];
         tab.active = true;
         if (!this.list.options)
             return;
         var options = this.list.options.map(function (t) { return t.value; });
-        var s = new Set(this.selectedOptions);
+        var s = new Set(this.tabService.selectedOptions);
         this.list.options.forEach(function (t) {
             t.selected = s.has(t.value);
         });
         var options_set = new Set(options);
-        this.selectedOptions.forEach(function (option) {
+        this.tabService.selectedOptions.forEach(function (option) {
             if (!options_set.has(option))
                 throw TypeError("'" + option + "' not found in mat-selection-list");
         });
@@ -108,7 +124,7 @@ var TabsComponent = /** @class */ (function () {
             if (this.dynamicTabs[i] === tab) {
                 this.dynamicTabs.splice(i, 1);
                 this.dynamicTabPlaceholder.viewContainer.remove(i);
-                this.selectedOptions = [tab.tabTitle];
+                this.tabService.selectedOptions = [tab.tabTitle];
                 this.selectTab(this.tabs.first);
                 break;
             }
@@ -126,11 +142,12 @@ var TabsComponent = /** @class */ (function () {
 TabsComponent.decorators = [
     { type: core.Component, args: [{
                 selector: 'vertical-tabs',
-                template: "<div fxLayout=\"row\" fxLayoutGap=\"1px\"\n     fxLayout.xs=\"column\">\n  <div fxFlex=\"33%\">\n    <mat-selection-list #list [(ngModel)]=\"selectedOptions\"\n                        (ngModelChange)=\"onNgModelChange($event)\"\n                        (selectionChange)=\"onNgModelChange($event)\">\n      <mat-list-option *ngFor=\"let tab of [].concat(tabs._results, dynamicTabs)\" [value]=\"tab.tabTitle\">\n        {{tab.tabTitle}}\n      </mat-list-option>\n    </mat-selection-list>\n    <mat-divider></mat-divider>\n  </div>\n\n  <div fxFlex=\"66%\">\n    <ng-content></ng-content>\n    <ng-template dynamicTabAnchor #container></ng-template>\n  </div>\n</div>\n"
+                template: "<div fxLayout=\"row\" fxLayoutGap=\"1px\" fxLayout.xs=\"column\">\n  <div fxFlex=\"33%\">\n    <mat-selection-list #list [(ngModel)]=\"tabService.selectedOptions\"\n                        (ngModelChange)=\"onNgModelChange($event)\"\n                        (selectionChange)=\"onNgModelChange($event)\">\n      <mat-list-option *ngFor=\"let tab of [].concat(tabs._results, dynamicTabs)\" [value]=\"tab.tabTitle\">\n        {{tab.tabTitle}}\n      </mat-list-option>\n    </mat-selection-list>\n    <mat-divider></mat-divider>\n    <button mat-button color=\"primary\" id=\"select_all\"\n            (click)=\"list.selectAll()\" *ngIf=\"showSelectAll\">\n      Select all\n    </button>\n  </div>\n\n  <div fxFlex=\"66%\" *ngIf=\"tabService.selectedOptions.length\">\n    <ng-content></ng-content>\n    <ng-template dynamicTabAnchor #container></ng-template>\n  </div>\n</div>\n"
             },] },
 ];
 TabsComponent.ctorParameters = function () { return [
     { type: core.ComponentFactoryResolver, },
+    { type: TabsService, },
 ]; };
 TabsComponent.propDecorators = {
     "tabs": [{ type: core.ContentChildren, args: [TabComponent,] },],
@@ -138,6 +155,7 @@ TabsComponent.propDecorators = {
     "list": [{ type: core.ViewChild, args: [material.MatSelectionList,] },],
     "multi": [{ type: core.Input },],
     "selectFirstTab": [{ type: core.Input },],
+    "showSelectAll": [{ type: core.Input },],
 };
 var TabsModule = /** @class */ (function () {
     function TabsModule() {
@@ -149,9 +167,10 @@ TabsModule.decorators = [
                 imports: [
                     common.CommonModule, forms.FormsModule,
                     flexLayout.FlexLayoutModule,
-                    material.MatListModule, material.MatDividerModule
+                    material.MatListModule, material.MatDividerModule, material.MatButtonModule
                 ],
                 declarations: [TabsComponent, TabComponent, DynamicTabAnchorDirective],
+                providers: [TabsService],
                 exports: [TabsComponent, TabComponent],
                 entryComponents: [TabComponent]
             },] },
@@ -160,7 +179,8 @@ TabsModule.decorators = [
 exports.TabsComponent = TabsComponent;
 exports.TabComponent = TabComponent;
 exports.TabsModule = TabsModule;
-exports.ɵa = DynamicTabAnchorDirective;
+exports.ɵb = DynamicTabAnchorDirective;
+exports.ɵa = TabsService;
 
 Object.defineProperty(exports, '__esModule', { value: true });
 

@@ -1,7 +1,6 @@
-<div fxLayout="row" fxLayoutGap="1px"
-     fxLayout.xs="column">
+<div fxLayout="row" fxLayoutGap="1px" fxLayout.xs="column">
   <div fxFlex="33%">
-    <mat-selection-list #list [(ngModel)]="selectedOptions"
+    <mat-selection-list #list [(ngModel)]="tabService.selectedOptions"
                         (ngModelChange)="onNgModelChange($event)"
                         (selectionChange)="onNgModelChange($event)">
       <mat-list-option *ngFor="let tab of [].concat(tabs._results, dynamicTabs)" [value]="tab.tabTitle">
@@ -9,9 +8,13 @@
       </mat-list-option>
     </mat-selection-list>
     <mat-divider></mat-divider>
+    <button mat-button color="primary" id="select_all"
+            (click)="list.selectAll()" *ngIf="showSelectAll">
+      Select all
+    </button>
   </div>
 
-  <div fxFlex="66%">
+  <div fxFlex="66%" *ngIf="tabService.selectedOptions.length">
     <ng-content></ng-content>
     <ng-template dynamicTabAnchor #container></ng-template>
   </div>

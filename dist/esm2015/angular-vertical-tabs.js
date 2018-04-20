@@ -1,5 +1,5 @@
-import { Component, Input, Directive, ViewContainerRef, ComponentFactoryResolver, ContentChildren, ViewChild, NgModule } from '@angular/core';
-import { MatSelectionList, MatDividerModule, MatListModule } from '@angular/material';
+import { Injectable, Component, Input, Directive, ViewContainerRef, ComponentFactoryResolver, ContentChildren, ViewChild, NgModule } from '@angular/core';
+import { MatSelectionList, MatButtonModule, MatDividerModule, MatListModule } from '@angular/material';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
@@ -8,8 +8,27 @@ import { FlexLayoutModule } from '@angular/flex-layout';
  * @fileoverview added by tsickle
  * @suppress {checkTypes} checked by tsc
  */
-class TabComponent {
+class TabsService {
     constructor() {
+        this.selectedOptions = [];
+    }
+}
+TabsService.decorators = [
+    { type: Injectable },
+];
+/** @nocollapse */
+TabsService.ctorParameters = () => [];
+
+/**
+ * @fileoverview added by tsickle
+ * @suppress {checkTypes} checked by tsc
+ */
+class TabComponent {
+    /**
+     * @param {?} tabsService
+     */
+    constructor(tabsService) {
+        this.tabsService = tabsService;
         this.active = false;
         this.isCloseable = false;
     }
@@ -19,23 +38,26 @@ TabComponent.decorators = [
                 selector: 'vertical-tab',
                 styles: [
                     `
-    .pane{
+    .pane {
       padding: 1em;
     }
   `
                 ],
-                template: `
-    <div *ngIf="active" class="pane">
-      <ng-content></ng-content>
-      <ng-container *ngIf="template"
-                    [ngTemplateOutlet]="template"
-                    [ngTemplateOutletContext]="{person: dataContext}">
-      </ng-container>
-    </div>
-  `
+                template: `<div *ngIf="active" class="pane">
+  <h3 *ngIf="tabsService.multi && tabsService.selectedOptions.length > 1">{{tabTitle}}</h3>
+  <ng-content></ng-content>
+  <ng-container *ngIf="template"
+                [ngTemplateOutlet]="template"
+                [ngTemplateOutletContext]="{person: dataContext}">
+  </ng-container>
+</div>
+`
             },] },
 ];
 /** @nocollapse */
+TabComponent.ctorParameters = () => [
+    { type: TabsService, },
+];
 TabComponent.propDecorators = {
     "tabTitle": [{ type: Input },],
     "active": [{ type: Input },],
@@ -73,13 +95,16 @@ DynamicTabAnchorDirective.ctorParameters = () => [
 class TabsComponent {
     /**
      * @param {?} componentFactoryResolver
+     * @param {?} tabService
      */
-    constructor(componentFactoryResolver) {
+    constructor(componentFactoryResolver, tabService) {
         this.componentFactoryResolver = componentFactoryResolver;
+        this.tabService = tabService;
         this.multi = true;
         this.selectFirstTab = true;
+        this.showSelectAll = false;
         this.dynamicTabs = [];
-        this.selectedOptions = [];
+        this.tabService.multi = this.multi;
     }
     /**
      * @return {?}
@@ -97,18 +122,18 @@ class TabsComponent {
         const /** @type {?} */ arr = this.tabs.toArray().concat(this.dynamicTabs);
         if (arr == null || arr.length < 1)
             return;
-        const /** @type {?} */ s = new Set(this.selectedOptions);
+        const /** @type {?} */ s = new Set(this.tabService.selectedOptions);
         arr.forEach(tab => tab.active = s.has(tab.tabTitle));
     }
     /**
      * @return {?}
      */
     setOptions() {
-        if (this.multi || !this.selectedOptions.length ||
+        if (this.multi || !this.tabService.selectedOptions.length ||
             !this.lastSelectedOptions || !this.lastSelectedOptions.length)
             return;
-        this.selectedOptions = this.selectedOptions.filter(tabTitle => tabTitle !== this.lastSelectedOptions[this.lastSelectedOptions.length - 1]);
-        this.lastSelectedOptions = this.selectedOptions;
+        this.tabService.selectedOptions = this.tabService.selectedOptions.filter(tabTitle => tabTitle !== this.lastSelectedOptions[this.lastSelectedOptions.length - 1]);
+        this.lastSelectedOptions = this.tabService.selectedOptions;
     }
     /**
      * @return {?}
@@ -123,19 +148,19 @@ class TabsComponent {
      */
     selectTab(tab) {
         this.multi ?
-            this.selectedOptions.push(tab.tabTitle)
-            : this.selectedOptions = [tab.tabTitle];
+            this.tabService.selectedOptions.push(tab.tabTitle)
+            : this.tabService.selectedOptions = [tab.tabTitle];
         tab.active = true;
         if (!this.list.options)
             return;
         const /** @type {?} */ options = this.list.options.map(t => t.value);
-        const /** @type {?} */ s = new Set(this.selectedOptions);
+        const /** @type {?} */ s = new Set(this.tabService.selectedOptions);
         this.list.options.forEach(t => {
             t.selected = s.has(t.value);
             // console.info(`'${t.value}' selected:`, t.selected);
         });
         const /** @type {?} */ options_set = new Set(options);
-        this.selectedOptions.forEach(option => {
+        this.tabService.selectedOptions.forEach(option => {
             if (!options_set.has(option))
                 throw TypeError(`'${option}' not found in mat-selection-list`);
         });
@@ -170,7 +195,7 @@ class TabsComponent {
             if (this.dynamicTabs[i] === tab) {
                 this.dynamicTabs.splice(i, 1);
                 this.dynamicTabPlaceholder.viewContainer.remove(i);
-                this.selectedOptions = [tab.tabTitle]; // TODO: duplicate handling
+                this.tabService.selectedOptions = [tab.tabTitle]; // TODO: duplicate handling
                 this.selectTab(this.tabs.first);
                 break;
             }
@@ -190,10 +215,9 @@ class TabsComponent {
 TabsComponent.decorators = [
     { type: Component, args: [{
                 selector: 'vertical-tabs',
-                template: `<div fxLayout="row" fxLayoutGap="1px"
-     fxLayout.xs="column">
+                template: `<div fxLayout="row" fxLayoutGap="1px" fxLayout.xs="column">
   <div fxFlex="33%">
-    <mat-selection-list #list [(ngModel)]="selectedOptions"
+    <mat-selection-list #list [(ngModel)]="tabService.selectedOptions"
                         (ngModelChange)="onNgModelChange($event)"
                         (selectionChange)="onNgModelChange($event)">
       <mat-list-option *ngFor="let tab of [].concat(tabs._results, dynamicTabs)" [value]="tab.tabTitle">
@@ -201,9 +225,13 @@ TabsComponent.decorators = [
       </mat-list-option>
     </mat-selection-list>
     <mat-divider></mat-divider>
+    <button mat-button color="primary" id="select_all"
+            (click)="list.selectAll()" *ngIf="showSelectAll">
+      Select all
+    </button>
   </div>
 
-  <div fxFlex="66%">
+  <div fxFlex="66%" *ngIf="tabService.selectedOptions.length">
     <ng-content></ng-content>
     <ng-template dynamicTabAnchor #container></ng-template>
   </div>
@@ -214,6 +242,7 @@ TabsComponent.decorators = [
 /** @nocollapse */
 TabsComponent.ctorParameters = () => [
     { type: ComponentFactoryResolver, },
+    { type: TabsService, },
 ];
 TabsComponent.propDecorators = {
     "tabs": [{ type: ContentChildren, args: [TabComponent,] },],
@@ -221,6 +250,7 @@ TabsComponent.propDecorators = {
     "list": [{ type: ViewChild, args: [MatSelectionList,] },],
     "multi": [{ type: Input },],
     "selectFirstTab": [{ type: Input },],
+    "showSelectAll": [{ type: Input },],
 };
 
 /**
@@ -234,9 +264,10 @@ TabsModule.decorators = [
                 imports: [
                     CommonModule, FormsModule,
                     FlexLayoutModule,
-                    MatListModule, MatDividerModule
+                    MatListModule, MatDividerModule, MatButtonModule
                 ],
                 declarations: [TabsComponent, TabComponent, DynamicTabAnchorDirective],
+                providers: [TabsService],
                 exports: [TabsComponent, TabComponent],
                 entryComponents: [TabComponent]
             },] },
@@ -255,5 +286,5 @@ TabsModule.decorators = [
  * Generated bundle index. Do not edit.
  */
 
-export { TabsComponent, TabComponent, TabsModule, DynamicTabAnchorDirective as ɵa };
+export { TabsComponent, TabComponent, TabsModule, DynamicTabAnchorDirective as ɵb, TabsService as ɵa };
 //# sourceMappingURL=angular-vertical-tabs.js.map

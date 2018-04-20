@@ -1,25 +1,22 @@
 import { Component, Input } from '@angular/core';
 
+import { TabsService } from './tabs.service';
+
 @Component({
   selector: 'vertical-tab',
   styles: [
     `
-    .pane{
+    .pane {
       padding: 1em;
     }
   `
   ],
-  template: `
-    <div *ngIf="active" class="pane">
-      <ng-content></ng-content>
-      <ng-container *ngIf="template"
-                    [ngTemplateOutlet]="template"
-                    [ngTemplateOutletContext]="{person: dataContext}">
-      </ng-container>
-    </div>
-  `
+  templateUrl: './tab.component.html'
 })
 export class TabComponent {
+  constructor(public tabsService: TabsService)  {
+  }
+
   @Input() tabTitle: string;
   @Input() active = false;
   @Input() template;

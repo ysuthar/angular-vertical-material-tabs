@@ -11,6 +11,7 @@ import { MatSelectionList } from '@angular/material';
 
 import { TabComponent } from './tab.component';
 import { DynamicTabAnchorDirective } from './dynamic-tab-anchor.directive';
+import { TabsService } from './tabs.service';
 
 @Component({
   selector: 'vertical-tabs',
@@ -25,13 +26,15 @@ export class TabsComponent implements AfterContentInit {
 
   @Input() multi = true;
   @Input() selectFirstTab = true;
+  @Input() showSelectAll = false;
 
   dynamicTabs: TabComponent[] = [];
 
-  selectedOptions: string[] = [];
   lastSelectedOptions: string[];
 
-  constructor(private componentFactoryResolver: ComponentFactoryResolver) {
+  constructor(private componentFactoryResolver: ComponentFactoryResolver,
+              public tabService: TabsService) {
+    this.tabService.multi = this.multi;
   }
 
   // contentChildren are set
@@ -44,20 +47,20 @@ export class TabsComponent implements AfterContentInit {
   private toggleTabActivations() {
     const arr: TabComponent[] = this.tabs.toArray().concat(this.dynamicTabs);
     if (arr == null || arr.length < 1) return;
-    const s = new Set(this.selectedOptions);
+    const s = new Set(this.tabService.selectedOptions);
     arr.forEach(tab => tab.active = s.has(tab.tabTitle));
   }
 
   private setOptions() {
-    if (this.multi || !this.selectedOptions.length ||
+    if (this.multi || !this.tabService.selectedOptions.length ||
       !this.lastSelectedOptions || !this.lastSelectedOptions.length)
       return;
 
-    this.selectedOptions = this.selectedOptions.filter(
+    this.tabService.selectedOptions = this.tabService.selectedOptions.filter(
       tabTitle => tabTitle !== this.lastSelectedOptions[this.lastSelectedOptions.length - 1]
     );
 
-    this.lastSelectedOptions = this.selectedOptions;
+    this.lastSelectedOptions = this.tabService.selectedOptions;
   }
 
   onNgModelChange(/*selected: string[]*/) {
@@ -67,21 +70,21 @@ export class TabsComponent implements AfterContentInit {
 
   selectTab(tab: TabComponent) {
     this.multi ?
-      this.selectedOptions.push(tab.tabTitle)
-      : this.selectedOptions = [tab.tabTitle];
+      this.tabService.selectedOptions.push(tab.tabTitle)
+      : this.tabService.selectedOptions = [tab.tabTitle];
     tab.active = true;
 
     if (!this.list.options) return;
 
     const options = this.list.options.map(t => t.value);
-    const s = new Set(this.selectedOptions);
+    const s = new Set(this.tabService.selectedOptions);
     this.list.options.forEach(t => {
       t.selected = s.has(t.value);
       // console.info(`'${t.value}' selected:`, t.selected);
     });
 
     const options_set = new Set(options);
-    this.selectedOptions.forEach(option => {
+    this.tabService.selectedOptions.forEach(option => {
       if (!options_set.has(option))
         throw TypeError(`'${option}' not found in mat-selection-list`);
     });
@@ -116,7 +119,7 @@ export class TabsComponent implements AfterContentInit {
         this.dynamicTabs.splice(i, 1);
 
         this.dynamicTabPlaceholder.viewContainer.remove(i);
-        this.selectedOptions = [tab.tabTitle];  // TODO: duplicate handling
+        this.tabService.selectedOptions = [tab.tabTitle];  // TODO: duplicate handling
         this.selectTab(this.tabs.first);
         break;
       }
