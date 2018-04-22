@@ -35,6 +35,7 @@ export class TabsComponent implements AfterContentInit {
     // if there is no active tab set, activate the first
     if (this.selectFirstTab && !this.tabs.filter(tab => tab.active).length)
       this.selectTab(this.tabs.first);
+    else this.checkSelectAll();
   }
 
   private toggleTabActivations() {
@@ -87,7 +88,9 @@ export class TabsComponent implements AfterContentInit {
   }
 
   private checkSelectAll() {
-    this.allSelected = this.list.options.reduce((p, c) => p ? c.selected : p, true);
+    if (!this.list || !this.list.options) return;
+    this.allSelected = this.list.options.length < 1 ? false
+      : this.list.options.reduce((p, c) => p ? c.selected : p, true);
   }
 
   openTab(title: string, template, data, isCloseable = false) {
@@ -122,16 +125,19 @@ export class TabsComponent implements AfterContentInit {
         break;
       }
     }
+    this.checkSelectAll();
   }
 
   closeActiveTab() {
     if (this.multi) console.warn('Closing the first active tab');
     const activeTab = this.dynamicTabs.filter(tab => tab.active);
     if (activeTab.length > 0) this.closeTab(activeTab[0]);
+    this.checkSelectAll();
   }
 
   toggleSelect() {
     this.allSelected ? this.list.deselectAll() : this.list.selectAll();
     this.allSelected = !this.allSelected;
+    this.checkSelectAll();
   }
 }

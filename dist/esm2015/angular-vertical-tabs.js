@@ -116,6 +116,8 @@ class TabsComponent {
         // if there is no active tab set, activate the first
         if (this.selectFirstTab && !this.tabs.filter(tab => tab.active).length)
             this.selectTab(this.tabs.first);
+        else
+            this.checkSelectAll();
     }
     /**
      * @return {?}
@@ -173,7 +175,10 @@ class TabsComponent {
      * @return {?}
      */
     checkSelectAll() {
-        this.allSelected = this.list.options.reduce((p, c) => p ? c.selected : p, true);
+        if (!this.list || !this.list.options)
+            return;
+        this.allSelected = this.list.options.length < 1 ? false
+            : this.list.options.reduce((p, c) => p ? c.selected : p, true);
     }
     /**
      * @param {?} title
@@ -210,6 +215,7 @@ class TabsComponent {
                 break;
             }
         }
+        this.checkSelectAll();
     }
     /**
      * @return {?}
@@ -220,6 +226,7 @@ class TabsComponent {
         const /** @type {?} */ activeTab = this.dynamicTabs.filter(tab => tab.active);
         if (activeTab.length > 0)
             this.closeTab(activeTab[0]);
+        this.checkSelectAll();
     }
     /**
      * @return {?}
@@ -227,6 +234,7 @@ class TabsComponent {
     toggleSelect() {
         this.allSelected ? this.list.deselectAll() : this.list.selectAll();
         this.allSelected = !this.allSelected;
+        this.checkSelectAll();
     }
 }
 TabsComponent.decorators = [

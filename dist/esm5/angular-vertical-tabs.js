@@ -69,6 +69,8 @@ var TabsComponent = /** @class */ (function () {
     TabsComponent.prototype.ngAfterContentInit = function () {
         if (this.selectFirstTab && !this.tabs.filter(function (tab) { return tab.active; }).length)
             this.selectTab(this.tabs.first);
+        else
+            this.checkSelectAll();
     };
     TabsComponent.prototype.toggleTabActivations = function () {
         var arr = this.tabs.toArray().concat(this.dynamicTabs);
@@ -110,7 +112,10 @@ var TabsComponent = /** @class */ (function () {
         this.checkSelectAll();
     };
     TabsComponent.prototype.checkSelectAll = function () {
-        this.allSelected = this.list.options.reduce(function (p, c) { return p ? c.selected : p; }, true);
+        if (!this.list || !this.list.options)
+            return;
+        this.allSelected = this.list.options.length < 1 ? false
+            : this.list.options.reduce(function (p, c) { return p ? c.selected : p; }, true);
     };
     TabsComponent.prototype.openTab = function (title, template, data, isCloseable) {
         if (isCloseable === void 0) { isCloseable = false; }
@@ -135,6 +140,7 @@ var TabsComponent = /** @class */ (function () {
                 break;
             }
         }
+        this.checkSelectAll();
     };
     TabsComponent.prototype.closeActiveTab = function () {
         if (this.multi)
@@ -142,10 +148,12 @@ var TabsComponent = /** @class */ (function () {
         var activeTab = this.dynamicTabs.filter(function (tab) { return tab.active; });
         if (activeTab.length > 0)
             this.closeTab(activeTab[0]);
+        this.checkSelectAll();
     };
     TabsComponent.prototype.toggleSelect = function () {
         this.allSelected ? this.list.deselectAll() : this.list.selectAll();
         this.allSelected = !this.allSelected;
+        this.checkSelectAll();
     };
     return TabsComponent;
 }());
