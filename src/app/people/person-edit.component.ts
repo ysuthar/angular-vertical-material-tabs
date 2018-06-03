@@ -9,7 +9,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { IPerson } from './people.service';
 
 @Component({
-  selector: 'vertical-person-edit',
+  selector: 'app-person-edit',
   template: `
     <form [formGroup]="personForm" (ngSubmit)="onPersonFormSubmit()">
       <input type="hidden" formControlName="id">

@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 
-import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/observable/of';
+import { Observable, of } from 'rxjs';
 
 export interface IPerson {
   id: number;
@@ -16,7 +15,7 @@ export class PeopleService {
   }
 
   getPeople(): Observable<IPerson[]> {
-    return Observable.of([
+    return of([
       {
         id: 1,
         name: 'Juri',

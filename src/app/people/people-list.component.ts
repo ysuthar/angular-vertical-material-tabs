@@ -7,7 +7,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { IPerson } from './people.service';
 
 @Component({
-  selector: 'vertical-people-list',
+  selector: 'app-people-list',
   template: `
     <table class="table table-striped">
       <thead>

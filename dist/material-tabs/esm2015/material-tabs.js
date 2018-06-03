@@ -1,0 +1,12 @@
+/**
+ * @fileoverview added by tsickle
+ * @suppress {checkTypes} checked by tsc
+ */
+/**
+ * Generated bundle index. Do not edit.
+ */
+export { MaterialTabsService, MaterialTabsComponent, MaterialTabsModule } from './public_api';
+export { DynamicTabAnchorDirective as ɵb } from './lib/dynamic-tab-anchor.directive';
+export { MaterialTabComponent as ɵa } from './lib/material-tab.component';
+
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoibWF0ZXJpYWwtdGFicy5qcyIsInNvdXJjZVJvb3QiOiJuZzovL21hdGVyaWFsLXRhYnMvIiwic291cmNlcyI6WyJtYXRlcmlhbC10YWJzLnRzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiI7Ozs7Ozs7QUFJQSwrRUFBYyxjQUFjLENBQUM7QUFFN0IsT0FBTyxFQUFDLHlCQUF5QixJQUFJLEVBQUUsRUFBQyxNQUFNLG9DQUFvQyxDQUFDO0FBQ25GLE9BQU8sRUFBQyxvQkFBb0IsSUFBSSxFQUFFLEVBQUMsTUFBTSw4QkFBOEIsQ0FBQyIsInNvdXJjZXNDb250ZW50IjpbIi8qKlxuICogR2VuZXJhdGVkIGJ1bmRsZSBpbmRleC4gRG8gbm90IGVkaXQuXG4gKi9cblxuZXhwb3J0ICogZnJvbSAnLi9wdWJsaWNfYXBpJztcblxuZXhwb3J0IHtEeW5hbWljVGFiQW5jaG9yRGlyZWN0aXZlIGFzIMm1Yn0gZnJvbSAnLi9saWIvZHluYW1pYy10YWItYW5jaG9yLmRpcmVjdGl2ZSc7XG5leHBvcnQge01hdGVyaWFsVGFiQ29tcG9uZW50IGFzIMm1YX0gZnJvbSAnLi9saWIvbWF0ZXJpYWwtdGFiLmNvbXBvbmVudCc7Il19

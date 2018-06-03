@@ -1,15 +1,15 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-
 import { IPerson, PeopleService } from './people/people.service';
-import { TabsComponent } from './tabs/tabs.component';
+import { MaterialTabsComponent } from '../../projects/material-tabs/src/lib/material-tabs.component';
 
 @Component({
-  selector: 'vertical-root',
-  templateUrl: './app.component.html'
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
   @ViewChild('personEdit') personEditTemplate;
-  @ViewChild(TabsComponent) tabsComponent: TabsComponent;
+  @ViewChild(MaterialTabsComponent) tabsComponent: MaterialTabsComponent;
   people: IPerson[];
 
   constructor(private peopleService: PeopleService) {
