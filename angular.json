@@ -128,38 +128,38 @@
         }
       }
     },
-    "material-tabs": {
-      "root": "projects/material-tabs",
-      "sourceRoot": "projects/material-tabs/src",
+    "vertical-tabs": {
+      "root": "projects/vertical-tabs",
+      "sourceRoot": "projects/vertical-tabs/src",
       "projectType": "library",
-      "prefix": "vertical",
+      "prefix": "ng",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-ng-packagr:build",
           "options": {
-            "tsConfig": "projects/material-tabs/tsconfig.lib.json",
-            "project": "projects/material-tabs/ng-package.json"
+            "tsConfig": "projects/vertical-tabs/tsconfig.lib.json",
+            "project": "projects/vertical-tabs/ng-package.json"
           },
           "configurations": {
             "production": {
-              "project": "projects/material-tabs/ng-package.prod.json"
+              "project": "projects/vertical-tabs/ng-package.prod.json"
             }
           }
         },
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
-            "main": "projects/material-tabs/src/test.ts",
-            "tsConfig": "projects/material-tabs/tsconfig.spec.json",
-            "karmaConfig": "projects/material-tabs/karma.conf.js"
+            "main": "projects/vertical-tabs/src/test.ts",
+            "tsConfig": "projects/vertical-tabs/tsconfig.spec.json",
+            "karmaConfig": "projects/vertical-tabs/karma.conf.js"
           }
         },
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
             "tsConfig": [
-              "projects/material-tabs/tsconfig.lib.json",
-              "projects/material-tabs/tsconfig.spec.json"
+              "projects/vertical-tabs/tsconfig.lib.json",
+              "projects/vertical-tabs/tsconfig.spec.json"
             ],
             "exclude": [
               "**/node_modules/**"

@@ -1,13 +1,13 @@
 <h1>Vertical tabs</h1>
 
-<vertical-material-tabs>
-  <vertical-material-tab tabTitle="People List">
-    <app-people-list [people]="people"
-                          (addPerson)="onAddPerson()"
-                          (editPerson)="onEditPerson($event)">
+<ng-vertical-tabs>
+  <ng-vertical-tab tabTitle="People List">
+    <app-people-list [people]="people" *ngIf="people"
+                     (addPerson)="onAddPerson()"
+                     (editPerson)="onEditPerson($event)">
     </app-people-list>
-  </vertical-material-tab>
-</vertical-material-tabs>
+  </ng-vertical-tab>
+</ng-vertical-tabs>
 
 <ng-template let-person="person" #personEdit>
   <app-person-edit [person]="person" (savePerson)="onPersonFormSubmit($event)"></app-person-edit>

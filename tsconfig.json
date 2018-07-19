@@ -17,11 +17,11 @@
       "dom"
     ],
     "paths": {
-      "material-tabs": [
-        "dist/material-tabs"
+      "vertical-tabs": [
+        "dist/vertical-tabs"
       ],
-      "material-tabs/*": [
-        "dist/material-tabs/*"
+      "vertical-tabs/*": [
+        "dist/vertical-tabs/*"
       ]
     }
   }
