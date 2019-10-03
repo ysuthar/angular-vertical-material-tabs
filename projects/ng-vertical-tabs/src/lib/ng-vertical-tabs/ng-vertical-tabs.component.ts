@@ -7,7 +7,7 @@ import { NgVerticalTabComponent } from '../ng-vertical-tab/ng-vertical-tab.compo
 import { DynamicTabAnchorDirective } from '../dynamic-tab-anchor.directive';
 
 @Component({
-  selector: 'ng-vertical-tabs',
+  selector: 'lib-ng-vertical-tabs',
   templateUrl: './ng-vertical-tabs.component.html',
   styleUrls: ['./ng-vertical-tabs.component.scss']
 })

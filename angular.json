@@ -131,7 +131,7 @@
       "projectType": "library",
       "root": "projects/ng-vertical-tabs",
       "sourceRoot": "projects/ng-vertical-tabs/src",
-      "prefix": "ng",
+      "prefix": "lib",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-ng-packagr:build",
