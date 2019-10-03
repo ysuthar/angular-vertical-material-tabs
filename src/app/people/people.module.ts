@@ -13,5 +13,4 @@ import { PeopleService } from './people.service';
   providers: [PeopleService],
   exports: [PeopleListComponent, PersonEditComponent]
 })
-export class PeopleModule {
-}
+export class PeopleModule {}

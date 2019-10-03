@@ -1,11 +1,12 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
-import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { VerticalTabsModule } from '../../projects/vertical-tabs/src/lib/vertical-tabs.module';
+
+import { NgVerticalTabsModule } from '../../projects/ng-vertical-tabs/src/lib/ng-vertical-tabs.module';
 import { PeopleModule } from './people/people.module';
 import { PeopleService } from './people/people.service';
+import { AppComponent } from './app.component';
 
 @NgModule({
   declarations: [
@@ -14,7 +15,7 @@ import { PeopleService } from './people/people.service';
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
-    VerticalTabsModule.forRoot(),
+    NgVerticalTabsModule.forRoot(),
     PeopleModule
   ],
   providers: [PeopleService],
